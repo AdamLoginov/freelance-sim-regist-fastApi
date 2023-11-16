@@ -17,6 +17,7 @@ app.add_middleware(
 
 class Guest(BaseModel):
         phone: int
+        contactPhone: int
         firstName: str
         lastName: str
         surName: str
@@ -29,6 +30,7 @@ class Guest(BaseModel):
         codeOffice: int
         numberDoc: int
         seriaDoc: int
+        
 
 
 
@@ -53,6 +55,7 @@ def add_guest(guest: Guest):
     sheet.cell(row=next_row, column=11, value=guest['seriaDoc'])
     sheet.cell(row=next_row, column=12, value=guest['numberDoc'])
     sheet.cell(row=next_row, column=13, value=guest['codeOffice'])
+    sheet.cell(row=next_row, column=14, value=guest['contactPhone'])
 
     wb.save('./data/data.xlsx')
 
