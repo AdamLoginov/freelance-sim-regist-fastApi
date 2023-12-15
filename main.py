@@ -27,30 +27,36 @@ class Guest(BaseModel):
         typeDoc: str
         issuedBy: str
         dateOfIssue: str
-        codeOffice: int
-        numberDoc: int
-        seriaDoc: int
-        
+        codeOffice: str
+        numberDoc: str
+        seriaDoc: str
+
+def get_date(date):
+     perem = date.split('-')
+
+     return f'{perem[2]}.{perem[1]}.{perem[0]}'
 
 
 
-@app.post("/addData")
+@app.post("/api/addData")
 def add_guest(guest: Guest):
     guest = guest.dict()
 
     wb = openpyxl.load_workbook('./data/data.xlsx')
     sheet = wb.active
     next_row = sheet.max_row + 1
+    
+
 
     sheet.cell(row=next_row, column=1, value=guest['phone'])
-    sheet.cell(row=next_row, column=2, value=guest['firstName'])
-    sheet.cell(row=next_row, column=3, value=guest['lastName'])
+    sheet.cell(row=next_row, column=2, value=guest['lastName'])
+    sheet.cell(row=next_row, column=3, value=guest['firstName'])
     sheet.cell(row=next_row, column=4, value=guest['surName'])
-    sheet.cell(row=next_row, column=5, value=guest['dateOfBorn'])
+    sheet.cell(row=next_row, column=5, value=get_date(guest['dateOfBorn']))
     sheet.cell(row=next_row, column=6, value=guest['placeOfBorn'])
     sheet.cell(row=next_row, column=7, value=guest['registAddress'])
     sheet.cell(row=next_row, column=8, value=guest['typeDoc'])
-    sheet.cell(row=next_row, column=9, value=guest['dateOfIssue'])
+    sheet.cell(row=next_row, column=9, value=get_date(guest['dateOfIssue']))
     sheet.cell(row=next_row, column=10, value=guest['issuedBy'])
     sheet.cell(row=next_row, column=11, value=guest['seriaDoc'])
     sheet.cell(row=next_row, column=12, value=guest['numberDoc'])
@@ -63,6 +69,6 @@ def add_guest(guest: Guest):
 
     return {"status": "Гость добавлен успешно"}
 
-@app.get("/downloadData")
+@app.get("/api/downloadData")
 def download_data():
     return FileResponse('./data/data.xlsx', filename='data.xlsx', headers={"Content-Disposition": "attachment"})
